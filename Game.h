@@ -28,6 +28,7 @@ private:
     sf::Texture loading_texture;
     sf::Sprite circle, x, circle_large, x_large, cat;
     sf::RectangleShape player_turn_rect, enemy_turn_rect;
+    sf::RectangleShape disconnect_rect, rematch_rect;
 
     //hold vars
     std::vector<std::vector<std::vector<std::vector<char> > > > grid;

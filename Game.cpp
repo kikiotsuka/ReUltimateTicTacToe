@@ -17,18 +17,11 @@ int Game::run(sf::RenderWindow &window) {
 
     sf::Thread opponent(&Game::opponent_move, this);
 
-    /**
-        TODO:
-            do something if other player disconnects
-            implement game won screen
-            implement replay screen
-    */
-
     while (window.isOpen()) {
         cat.setRotation(cat.getRotation() + 1);
         update_screen(window);
 
-        if (!disconnect && !player_turn && !pending_move) {
+        if (!disconnect && !gameover && !player_turn && !pending_move) {
             pending_move = true;
             opponent.launch();
         }
@@ -52,13 +45,13 @@ int Game::run(sf::RenderWindow &window) {
                 }
                 break;
             case sf::Event::MouseButtonPressed:
-                if (!disconnect && player_turn && e.mouseButton.button == sf::Mouse::Left) {
+                if (!disconnect && !gameover && player_turn && e.mouseButton.button == sf::Mouse::Left) {
                     sf::Vector2f coord(e.mouseButton.x, e.mouseButton.y);
                     mouse_click(coord);
                 }
                 break;
             case sf::Event::MouseMoved:
-                if (!disconnect && player_turn) {
+                if (!disconnect && !gameover && player_turn) {
                     sf::Vector2f coord(e.mouseMove.x, e.mouseMove.y);
                     mouse_move(coord);
                 }
@@ -334,8 +327,8 @@ bool Game::init_font() {
     lose_text.setFont(font);
     win_text.setString("Winner!");
     lose_text.setString("Loser!");
-    win_text.setCharacterSize(NAME_HEIGHT * 2.0f);
-    lose_text.setCharacterSize(NAME_HEIGHT * 2.0f);
+    win_text.setCharacterSize(NAME_HEIGHT * 1.5f);
+    lose_text.setCharacterSize(NAME_HEIGHT * 1.5f);
     r = win_text.getGlobalBounds();
     win_text.setOrigin(r.width / 2.0f, r.height / 2.0f);
     r = lose_text.getGlobalBounds();
@@ -347,6 +340,16 @@ bool Game::init_font() {
     rematch_text.setFont(font);
     disconnect_text.setString("Disconnect error, press any key to quit");
     rematch_text.setString("Press any key to rematch.");
+    disconnect_text.setCharacterSize(NAME_HEIGHT * 1.5f);
+    rematch_text.setCharacterSize(NAME_HEIGHT * 1.5f);
+    r = disconnect_text.getGlobalBounds();
+    disconnect_text.setOrigin(r.width / 2.0f, r.height / 2.0f);
+    r = rematch_text.getGlobalBounds();
+    rematch_text.setOrigin(r.width / 2.0f, r.height / 2.0f);
+    disconnect_text.setColor(sf::Color::Black);
+    rematch_text.setColor(sf::Color::Black);
+    disconnect_text.setPosition(S_WIDTH / 2.0f, S_HEIGHT / 2.0f);
+    rematch_text.setPosition(S_WIDTH / 2.0f, S_HEIGHT / 2.0f);
     return true;
 }
 
@@ -377,15 +380,31 @@ bool Game::init_texture() {
 }
 
 void Game::init_rect() {
+    //text rects
+    sf::FloatRect r = disconnect_text.getGlobalBounds();
+    disconnect_rect.setSize(sf::Vector2f(r.width + 10.0f, r.height + 10.0f));
+    disconnect_rect.setOrigin(disconnect_rect.getSize().x / 2.0f, disconnect_rect.getSize().y / 2.0f);
+    disconnect_rect.setPosition(disconnect_text.getPosition().x, disconnect_text.getPosition().y + 3.0f);
+    disconnect_rect.setFillColor(sf::Color::White);
+    disconnect_rect.setOutlineColor(sf::Color::Black);
+    disconnect_rect.setOutlineThickness(3);
+    r = disconnect_text.getGlobalBounds();
+    rematch_rect.setSize(sf::Vector2f(r.width + 10.0f, r.height + 10.0f));
+    rematch_rect.setOrigin(rematch_rect.getSize().x / 2.0f, rematch_rect.getSize().y / 2.0f);
+    rematch_rect.setPosition(rematch_text.getPosition().x, rematch_text.getPosition().y + 3.0f);
+    rematch_rect.setFillColor(sf::Color::White);
+    rematch_rect.setOutlineColor(sf::Color::Black);
+    rematch_rect.setOutlineThickness(3);
+
     //turn rects
-    player_turn_rect.setSize(sf::Vector2f(400.0f, 25.0f));
-    enemy_turn_rect.setSize(sf::Vector2f(400.0f, 25.0f));
+    player_turn_rect.setSize(sf::Vector2f(200.0f, 25.0f));
+    enemy_turn_rect.setSize(sf::Vector2f(200.0f, 25.0f));
     player_turn_rect.setFillColor(sf::Color::Green);
     enemy_turn_rect.setFillColor(sf::Color::Green);
     player_turn_rect.setOrigin(player_turn_rect.getSize().x / 2.0f, player_turn_rect.getSize().y / 2.0f);
     enemy_turn_rect.setOrigin(enemy_turn_rect.getSize().x / 2.0f, enemy_turn_rect.getSize().y / 2.0f);
-    player_turn_rect.setPosition(600.0f, player_name.getPosition().y - 50);
-    enemy_turn_rect.setPosition(600.0f, enemy_name.getPosition().y + 50);
+    player_turn_rect.setPosition(700.0f, player_name.getPosition().y - 50);
+    enemy_turn_rect.setPosition(700.0f, enemy_name.getPosition().y + 50);
 
     //initialize tile system
     float large_buffer = 10.0f;
@@ -499,5 +518,16 @@ void Game::update_screen(sf::RenderWindow &window) {
             window.draw(x);
         }
     }
+
+    if (disconnect) {
+        window.draw(disconnect_rect);
+        window.draw(disconnect_text);
+    } else if (gameover) {
+        window.draw(win_text);
+        window.draw(lose_text);
+        window.draw(rematch_rect);
+        window.draw(rematch_text);
+    }
+
     window.display();
 }

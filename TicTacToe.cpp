@@ -3,8 +3,6 @@
 #include <SFML/Network.hpp>
 #include <SFML/Window.hpp>
 
-#include <cstdio>
-#include <iostream>
 #include <string>
 #include <vector>
 
