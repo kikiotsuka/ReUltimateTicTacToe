@@ -29,9 +29,9 @@ int main() {
     int mode = -1;
 
     std::vector<Screen*> screens;
-    screens.push_back(new Input(username, "Enter your name (Max 20 Characters)"));
+    screens.push_back(new Input(username, "Enter your name (Max 10 Characters)", 10));
     screens.push_back(new Selector(mode));
-    screens.push_back(new Input(ip, "Enter server ip"));
+    screens.push_back(new Input(ip, "Enter server ip", 20));
 
     while (status != -1 && status < screens.size()) {
         status = screens[status]->run(window);

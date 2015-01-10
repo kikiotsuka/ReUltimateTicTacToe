@@ -1,8 +1,9 @@
 #include "Input.h"
 
-Input::Input(std::string &input_str, std::string query_message) {
+Input::Input(std::string &input_str, std::string query_message, int max_char) {
     this->input_str = &input_str;
     this->query_message = query_message;
+    this->max_char = max_char;
     init_rect();
 }
 
@@ -36,7 +37,7 @@ int Input::run(sf::RenderWindow &window) {
                     }
                 } else if (e.text.unicode == 27) { //escape key
                     window.close();
-                } else if (input.size() < 20 && validate_keystroke(e.text.unicode)) {
+                } else if (input.size() < max_char && validate_keystroke(e.text.unicode)) {
                     char to_add = static_cast<char>(e.text.unicode);
                     input += to_add;
                     input_text.setString(input);

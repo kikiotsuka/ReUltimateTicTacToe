@@ -25,7 +25,7 @@ private:
     sf::Texture piece_texture, piece_large_texture;
     sf::Texture loading_texture;
     sf::Sprite circle, x, circle_large, x_large, cat;
-    std::vector<sf::RectangleShape> name_rects;
+    sf::RectangleShape player_turn_rect, enemy_turn_rect;
 
     //hold vars
     std::vector<std::vector<std::vector<std::vector<char> > > > grid;
@@ -50,6 +50,7 @@ private:
 
     void mouse_move(sf::Vector2f coord);
     void mouse_click(sf::Vector2f coord);
+    void mouse_left();
 
     bool init();
     bool init_font();

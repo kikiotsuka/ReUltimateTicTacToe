@@ -17,6 +17,13 @@ int Game::run(sf::RenderWindow &window) {
 
     sf::Thread opponent(&Game::opponent_move, this);
 
+    /**
+        TODO:
+            do something if other player disconnects
+            implement game won screen
+            implement replay screen
+    */
+
     while (window.isOpen()) {
         if (disconnect) {
             //TODO do something if other player disconnects
@@ -25,6 +32,8 @@ int Game::run(sf::RenderWindow &window) {
         if (gameover) {
             std::cout << "Player: " << winner << " won!" << "\n";
         }
+
+        cat.setRotation(cat.getRotation() + 1);
         update_screen(window);
 
         if (!disconnect && !player_turn && !pending_move) {
@@ -50,10 +59,14 @@ int Game::run(sf::RenderWindow &window) {
                 }
                 break;
             case sf::Event::MouseMoved:
-                sf::Vector2f coord(e.mouseMove.x, e.mouseMove.y);
                 if (!disconnect && player_turn) {
+                    sf::Vector2f coord(e.mouseMove.x, e.mouseMove.y);
                     mouse_move(coord);
                 }
+                break;
+            case sf::Event::MouseLeft:
+                mouse_left();
+                break;
             }
         }
     }
@@ -192,6 +205,11 @@ void Game::mouse_click(sf::Vector2f coord) {
     }
 }
 
+void Game::mouse_left() {
+    delete ghost_spot;
+    ghost_spot = NULL;
+}
+
 void Game::reset_game() {
     char tmp = player_piece;
     player_piece = enemy_piece;
@@ -296,16 +314,19 @@ bool Game::init_font() {
     if (!font.loadFromFile(FONT_FAMILY)) {
         return false;
     }
-    std::cout << username << " " << other << "\n";
     enemy_name.setFont(font);
     enemy_name.setString(other);
     enemy_name.setCharacterSize(NAME_HEIGHT);
-    enemy_name.setPosition(620.0f, 20.0f);
+    sf::FloatRect r = enemy_name.getGlobalBounds();
+    enemy_name.setOrigin(r.width / 2.0f, r.height / 2.0f);
+    enemy_name.setPosition(S_WIDTH - 200 / 2.0f, 50.0f);
     enemy_name.setColor(sf::Color::Black);
     player_name.setFont(font);
     player_name.setString(username);
     player_name.setCharacterSize(NAME_HEIGHT);
-    player_name.setPosition(620.0f, S_HEIGHT - 20.0f - NAME_HEIGHT);
+    r = player_name.getGlobalBounds();
+    player_name.setOrigin(r.width / 2.0f, r.height / 2.0f);
+    player_name.setPosition(S_WIDTH - 200 / 2.0f, S_HEIGHT - 50.0f);
     player_name.setColor(sf::Color::Black);
     return true;
 }
@@ -337,12 +358,15 @@ bool Game::init_texture() {
 }
 
 void Game::init_rect() {
-    sf::FloatRect pfrect(player_name.getGlobalBounds());
-    name_rects.push_back(sf::RectangleShape(sf::Vector2f(pfrect.width + 10.0f, pfrect.height+ 10.0f)));
-    pfrect = sf::FloatRect(enemy_name.getGlobalBounds());
-    name_rects.push_back(sf::RectangleShape(sf::Vector2f(pfrect.width + 10.0f, pfrect.height+ 10.0f)));
-    name_rects[0].setPosition(enemy_name.getPosition());
-    name_rects[1].setPosition(player_name.getPosition());
+    //turn rects
+    player_turn_rect.setSize(sf::Vector2f(400.0f, 25.0f));
+    enemy_turn_rect.setSize(sf::Vector2f(400.0f, 25.0f));
+    player_turn_rect.setFillColor(sf::Color::Green);
+    enemy_turn_rect.setFillColor(sf::Color::Green);
+    player_turn_rect.setOrigin(player_turn_rect.getSize().x / 2.0f, player_turn_rect.getSize().y / 2.0f);
+    enemy_turn_rect.setOrigin(enemy_turn_rect.getSize().x / 2.0f, enemy_turn_rect.getSize().y / 2.0f);
+    player_turn_rect.setPosition(600.0f, player_name.getPosition().y - 50);
+    enemy_turn_rect.setPosition(600.0f, enemy_name.getPosition().y + 50);
 
     //initialize tile system
     float large_buffer = 10.0f;
@@ -386,9 +410,18 @@ void Game::init_rect() {
 
 void Game::update_screen(sf::RenderWindow &window) {
     window.clear(sf::Color::White);
-    for (int i = 0; i < name_rects.size(); i++) {
-        window.draw(name_rects[i]);
+    window.draw(cat);
+
+    if (player_turn) {
+        player_turn_rect.setFillColor(sf::Color::Green);
+        enemy_turn_rect.setFillColor(sf::Color::Red);
+    } else {
+        enemy_turn_rect.setFillColor(sf::Color::Green);
+        player_turn_rect.setFillColor(sf::Color::Red);
     }
+    window.draw(player_turn_rect);
+    window.draw(enemy_turn_rect);
+
     window.draw(player_name);
     window.draw(enemy_name);
     for (int i = 0; i < master_grid_rect.size(); i++) {

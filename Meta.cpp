@@ -7,8 +7,8 @@ extern const std::string FONT_FAMILY = "times.ttf";
 
 extern const int SCREEN_NAME_INPUT = 0; //select username
 extern const int SCREEN_TYPE_SELECTOR = 1; //select if client or server
-extern const int SCREEN_IP_INPUT = 2; //select ip address CLIENT ONLY
-extern const int SCREEN_CONNECTION_WAITING = 3; //wait for client to connect SERVER ONLY
+extern const int SCREEN_IP_INPUT = 2;
+extern const int SCREEN_CONNECTION_WAITING = 3;
 extern const int SCREEN_PLAYING = 4;
 
 extern const int MODE_CLIENT = 0;
@@ -18,7 +18,7 @@ extern const std::string SERVER_IP = "";
 extern const int SERVER_PORT = 10485;
 
 //measurements for game screen
-extern const float NAME_HEIGHT = 30.0f;
+extern const float NAME_HEIGHT = 20.0f;
 
 //reference index of sprites
 extern const int SMALL = 0;
