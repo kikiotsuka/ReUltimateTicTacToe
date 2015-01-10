@@ -15,7 +15,6 @@ private:
     bool init_text(std::string message);
     void update_cursor_position();
     bool validate_keystroke(int ascii_id);
-    bool validate_input(std::string input);
     void update_screen(sf::RenderWindow &window);
 public:
     Input(std::string &input_str, std::string query_message);

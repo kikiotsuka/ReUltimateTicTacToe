@@ -27,10 +27,7 @@ int Input::run(sf::RenderWindow &window) {
                     update_cursor_position();
                     update_screen(window);
                 } else if (e.text.unicode == 13) { //carriage return
-                    if (input.size() == 0) {
-                        input = *input_str;
-                    }
-                    if (validate_input(input)) {
+                    if (input.size() > 0) {
                         *input_str = input;
                         if (query_message == "Enter server ip") {
                             return SCREEN_CONNECTION_WAITING;
@@ -97,10 +94,6 @@ bool Input::validate_keystroke(int ascii_id) {
     if (ascii_id >= 'A' && ascii_id <= 'Z') return true;
     if (ascii_id >= '0' && ascii_id <= '9') return true;
     return ascii_id >= 'a' && ascii_id <= 'z' || ascii_id == '.';
-}
-
-bool Input::validate_input(std::string input) {
-    return input.size() > 0 && input.size() <= 20;
 }
 
 void Input::update_screen(sf::RenderWindow &window) {
