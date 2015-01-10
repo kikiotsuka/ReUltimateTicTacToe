@@ -25,14 +25,6 @@ int Game::run(sf::RenderWindow &window) {
     */
 
     while (window.isOpen()) {
-        if (disconnect) {
-            //TODO do something if other player disconnects
-            std::cout << "DISCONNECTED" << "\n";
-        }
-        if (gameover) {
-            std::cout << "Player: " << winner << " won!" << "\n";
-        }
-
         cat.setRotation(cat.getRotation() + 1);
         update_screen(window);
 
@@ -50,6 +42,13 @@ int Game::run(sf::RenderWindow &window) {
             case sf::Event::KeyPressed:
                 if (e.key.code == sf::Keyboard::Escape) {
                     window.close();
+                } else {
+                    if (gameover) {
+                        reset_game();
+                    } else if (disconnect) {
+                        window.close();
+                        break;
+                    }
                 }
                 break;
             case sf::Event::MouseButtonPressed:
@@ -91,8 +90,9 @@ void Game::opponent_move() {
         master_grid[i][j] = enemy_piece;
         next_spot = sf::Vector2i(-1, -1);
         if (check_win(master_grid, enemy_piece)) {
-            winner = enemy_piece;
             gameover = true;
+            win_text.setPosition(player_turn_rect.getPosition().x, player_turn_rect.getPosition().y - 50.0f);
+            lose_text.setPosition(enemy_turn_rect.getPosition().x, enemy_turn_rect.getPosition().y + 50.0f);
         }
     }
     sf::Mutex mutex;
@@ -190,7 +190,8 @@ void Game::mouse_click(sf::Vector2f coord) {
                 master_grid[i][j] = player_piece;
                 if (check_win(master_grid, player_piece)) {
                     gameover = true;
-                    winner = player_piece;
+                    win_text.setPosition(player_turn_rect.getPosition().x, player_turn_rect.getPosition().y - 50.0f);
+                    lose_text.setPosition(enemy_turn_rect.getPosition().x, enemy_turn_rect.getPosition().y + 50.0f);
                 }
             }
             sf::Packet p;
@@ -219,7 +220,6 @@ void Game::reset_game() {
     } else {
         player_turn = false;
     }
-    winner = '.';
     next_spot = sf::Vector2i(-1, -1);
     ghost_spot = NULL;
     pending_move = false;
@@ -251,8 +251,9 @@ void Game::reset_game() {
 }
 
 bool Game::check_win(std::vector<std::vector<char> > to_check, char piece) {
-    if (check_vert(to_check, piece) || check_horz(to_check, piece)) return true;
-    return check_majdiag(to_check, piece) || check_mindiag(to_check, piece);
+    bool status = check_vert(to_check, piece) || check_horz(to_check, piece);
+    status = status || check_majdiag(to_check, piece) || check_mindiag(to_check, piece);
+    return status;
 }
 
 bool Game::check_vert(std::vector<std::vector<char> > to_check, char piece) {
@@ -328,6 +329,24 @@ bool Game::init_font() {
     player_name.setOrigin(r.width / 2.0f, r.height / 2.0f);
     player_name.setPosition(S_WIDTH - 200 / 2.0f, S_HEIGHT - 50.0f);
     player_name.setColor(sf::Color::Black);
+
+    win_text.setFont(font);
+    lose_text.setFont(font);
+    win_text.setString("Winner!");
+    lose_text.setString("Loser!");
+    win_text.setCharacterSize(NAME_HEIGHT * 2.0f);
+    lose_text.setCharacterSize(NAME_HEIGHT * 2.0f);
+    r = win_text.getGlobalBounds();
+    win_text.setOrigin(r.width / 2.0f, r.height / 2.0f);
+    r = lose_text.getGlobalBounds();
+    lose_text.setOrigin(r.width / 2.0f, r.height / 2.0f);
+    win_text.setColor(sf::Color::Black);
+    lose_text.setColor(sf::Color::Black);
+
+    disconnect_text.setFont(font);
+    rematch_text.setFont(font);
+    disconnect_text.setString("Disconnect error, press any key to quit");
+    rematch_text.setString("Press any key to rematch.");
     return true;
 }
 
@@ -377,7 +396,7 @@ void Game::init_rect() {
     sf::RectangleShape r_small(sf::Vector2f(ninth, ninth));
     sf::RectangleShape r_large(sf::Vector2f(third + small_buffer * 3, third + small_buffer * 3));
     r_small.setFillColor(sf::Color::White);
-    r_large.setFillColor(sf::Color::Red);
+    r_large.setFillColor(sf::Color::Green);
     r_small.setOutlineColor(sf::Color::Black);
     r_small.setOutlineThickness(-1);
     r_large.setOutlineColor(sf::Color::Black);

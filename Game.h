@@ -22,6 +22,8 @@ private:
     //for display
     sf::Font font;
     sf::Text player_name, enemy_name;
+    sf::Text win_text, lose_text;
+    sf::Text disconnect_text, rematch_text;
     sf::Texture piece_texture, piece_large_texture;
     sf::Texture loading_texture;
     sf::Sprite circle, x, circle_large, x_large, cat;
@@ -35,7 +37,7 @@ private:
     bool player_turn; //keep track of who's move
     bool pending_move; //prevent thread from being called multiple times
     char player_piece, enemy_piece;
-    bool gameover; char winner;
+    bool gameover;
 
     bool disconnect; //in case of bad stuff
 

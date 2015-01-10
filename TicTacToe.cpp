@@ -23,7 +23,7 @@ int main() {
 
     std::string username = "";
     std::string other = "";
-    std::string ip = SERVER_IP;
+    std::string ip = "";
     int status = 0;
     sf::TcpSocket socket;
     int mode = -1;

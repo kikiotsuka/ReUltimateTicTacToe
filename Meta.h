@@ -17,7 +17,6 @@ extern const int SCREEN_PLAYING;
 extern const int MODE_CLIENT;
 extern const int MODE_SERVER;
 
-extern const std::string SERVER_IP;
 extern const int SERVER_PORT;
 
 //measurements for game screen
