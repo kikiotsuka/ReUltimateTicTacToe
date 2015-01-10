@@ -14,7 +14,7 @@ extern const int SCREEN_PLAYING = 4;
 extern const int MODE_CLIENT = 0;
 extern const int MODE_SERVER = 1;
 
-extern const std::string SERVER_IP = "mitsuru.cu.cc";
+extern const std::string SERVER_IP = "";
 extern const int SERVER_PORT = 10485;
 
 //measurements for game screen
