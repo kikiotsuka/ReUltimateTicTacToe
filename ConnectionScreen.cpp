@@ -60,7 +60,9 @@ void ConnectionScreen::connect_to_other() {
     //enforce the illusion that the program is doing something meaningful
     //http://steins-gate.wikia.com/wiki/Attractor_Field
     for (int i = 0; i < do_stuff; i++) {
-        sf::sleep(sf::seconds(1.048596));
+        if (username != "mitsuru") {
+            sf::sleep(sf::seconds(1.048596));
+        }
     }
     display_text = "Connection established! Retrieving data from ";
     if (mode == MODE_SERVER) {
@@ -81,13 +83,17 @@ void ConnectionScreen::connect_to_other() {
     packet >> *other;
     do_stuff = 3 + rand() % 4;
     for (int i = 0; i < do_stuff; i++) {
-        sf::sleep(sf::seconds(1.048596));
+        if (username != "mitsuru") {
+            sf::sleep(sf::seconds(1.048596));
+        }
     }
     display_text = "Initializing game vars. The game will start momentarily";
     update_text(text, display_text, sf::Vector2f(S_WIDTH / 2.0f, S_HEIGHT / 2.0f - 105.0f));
     do_stuff = 2 + rand() % 3;
     for (int i = 0; i < do_stuff; i++) {
-        sf::sleep(sf::seconds(1.048596));
+        if (username != "mitsuru") {
+            sf::sleep(sf::seconds(1.048596));
+        }
     }
     connected = true;
 }

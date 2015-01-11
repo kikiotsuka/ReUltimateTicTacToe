@@ -27,7 +27,7 @@ int Input::run(sf::RenderWindow &window) {
                     input_text.setString(input);
                     update_cursor_position();
                     update_screen(window);
-                } else if (e.text.unicode == 13) { //carriage return
+                } else if (e.text.unicode == 13 || e.text.unicode == 10) { //carriage return
                     if (input.size() > 0) {
                         *input_str = input;
                         if (query_message == "Enter server ip") {

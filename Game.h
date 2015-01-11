@@ -11,8 +11,6 @@
 #include "Screen.h"
 #include "Meta.h"
 
-#include <iostream> //TODO remove me
-
 class Game : public Screen {
 private:
     sf::TcpSocket *socket;
