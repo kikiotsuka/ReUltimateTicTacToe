@@ -354,13 +354,13 @@ bool Game::init_font() {
 }
 
 bool Game::init_texture() {
-    if (!piece_texture.loadFromFile("piece.png")) {
+    if (!piece_texture.loadFromFile("media/piece.png")) {
         return false;
     }
-    if (!piece_large_texture.loadFromFile("piece_large.png")) {
+    if (!piece_large_texture.loadFromFile("media/piece_large.png")) {
         return false;
     }
-    if (!loading_texture.loadFromFile("loading_icon.jpg")) {
+    if (!loading_texture.loadFromFile("media/loading_icon.jpg")) {
         return false;
     }
     circle.setTexture(piece_texture);

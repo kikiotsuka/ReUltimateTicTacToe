@@ -3,7 +3,7 @@
 extern const int S_WIDTH = 800;
 extern const int S_HEIGHT = 600;
 extern const int FPS = 60;
-extern const std::string FONT_FAMILY = "times.ttf";
+extern const std::string FONT_FAMILY = "media/times.ttf";
 
 extern const int SCREEN_NAME_INPUT = 0; //select username
 extern const int SCREEN_TYPE_SELECTOR = 1; //select if client or server

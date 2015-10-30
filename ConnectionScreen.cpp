@@ -125,7 +125,7 @@ bool ConnectionScreen::init_text() {
 }
 
 bool ConnectionScreen::init_img() {
-    if (!texture.loadFromFile("loading_icon.jpg")) {
+    if (!texture.loadFromFile("media/loading_icon.jpg")) {
         return -1;
     }
     sprite.setTexture(texture);
